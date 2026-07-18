@@ -45,8 +45,14 @@ class AdoptionViewSet(ModelViewSet):
     def perform_create(self, serializer):
         pet = serializer.validated_data['pet']
 
+        if pet.adoption_status == 'P':
+            raise ValidationError("This pet already has a pending adoption request.")
         if pet.adoption_status == 'D' :
             raise ValidationError("This pet has already been adopted.")
+
+        # Short style
+        # if pet.adoption_status in ['P', 'D'] :
+        #     raise ValidationError("This pet is not available for adoption.")
         
         serializer.save()
 
